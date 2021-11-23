@@ -13,7 +13,9 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_DB: slack
   web:
-    image: node-redis-postgres
+    image: node-express-redis-postgres:latest
+    volumes:
+      - .:/app
     ports:
       - "3000:3000"
     networks:
@@ -21,6 +23,6 @@ services:
     environment:
       DB_HOST: db
       REDIS_HOST: redis
-    command: ["./wait-for-it.sh", "db:5432", "--", "node", "index.js"]
+    command: ["npm", "start"]
 networks:
   webnet:
