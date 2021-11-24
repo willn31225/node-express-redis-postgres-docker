@@ -2,28 +2,26 @@ version: "3"
 services:
   redis:
     image: redis
-    networks: 
-      - webnet
   db:
     image: postgres
-    networks: 
-      - webnet
+    ports:
+      - "5432:5432"
     environment:
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_USER: postgres
-      POSTGRES_DB: slack
+      POSTGRES_USER: ${POSTGRES_USER} 
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD} 
+      POSTGRES_DB: ${POSTGRES_DB}
   web:
     image: node-express-redis-postgres:latest
+    depends_on:
+      - db
+      - redis
     volumes:
       - .:/app
       - /app/node_modules
     ports:
       - "3000:3000"
-    networks:
-      - webnet
     environment:
-      DB_HOST: db
-      REDIS_HOST: redis
+      DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      NODE_ENV: development
+      PORT: 3000
     command: ["npm", "start"]
-networks:
-  webnet:
