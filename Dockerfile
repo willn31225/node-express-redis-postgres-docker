@@ -6,4 +6,4 @@ RUN chown -R node:node node_modules
 RUN chown -R 1000:1000 "/root/.npm"
 COPY . ./
 EXPOSE 3000
-CMD ["node", "src/index.js"]
+CMD ["npm", "start"]
